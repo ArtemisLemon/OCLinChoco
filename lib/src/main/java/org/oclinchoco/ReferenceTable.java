@@ -10,18 +10,24 @@ import java.util.stream.IntStream;
 
 public class ReferenceTable {
     int rows,cols,domain;
+    int minCard, maxCard; boolean has_nulls;
 
     Model csp;
     IntVar[][] ptr_matrix;
     IntVar[][] occ_matrix;
 
-    public ReferenceTable(Model m, int n, int nn, int d){
-        this.csp = m;
-        this.rows=n; this.cols=nn; this.domain=d;
+    public ReferenceTable(Model m, int n, int nn, int c, int d){
+        csp = m;
+        rows=n; cols=nn; domain=d;
+        minCard = c; maxCard=cols;
+        has_nulls = !(minCard==maxCard);
 
-        this.ptr_matrix = csp.intVarMatrix(rows, cols, 0,domain);
-        this.occ_matrix = csp.intVarMatrix(rows, domain+1, 0, cols);
+        // Variables
+        if (has_nulls) ptr_matrix = csp.intVarMatrix(rows, cols, 0,domain);
+            else ptr_matrix = csp.intVarMatrix(rows, cols, 1,domain);
+        occ_matrix = csp.intVarMatrix(rows, domain+1, 0, cols);
 
+        // Constraints
         int[] values = IntStream.range(0, d+1).toArray();
         for(int i=0;i<n;i++) 
             csp.globalCardinality(ptr_matrix[i], values, occ_matrix[i], true).post();
