@@ -17,11 +17,13 @@ public class ReferenceTable {
 
     public ReferenceTable(Model m, int n, int nn, int d){
         this.csp = m;
-        this.ptr_matrix = m.intVarMatrix(n, nn, 0,d);
-        this.occ_matrix = m.intVarMatrix(n, d+1, 0, nn);
+        this.rows=n; this.cols=nn; this.domain=d;
+
+        this.ptr_matrix = csp.intVarMatrix(rows, cols, 0,domain);
+        this.occ_matrix = csp.intVarMatrix(rows, domain+1, 0, cols);
 
         int[] values = IntStream.range(0, d+1).toArray();
         for(int i=0;i<n;i++) 
-            m.globalCardinality(ptr_matrix[i], values, occ_matrix[i], true);
+            csp.globalCardinality(ptr_matrix[i], values, occ_matrix[i], true).post();
     }
 }
