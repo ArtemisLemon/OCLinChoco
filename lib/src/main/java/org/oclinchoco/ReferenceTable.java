@@ -15,9 +15,10 @@ public class ReferenceTable {
     Model csp;
     IntVar[][] ptr_matrix;
     IntVar[][] occ_matrix;
+    IntVar[] nullptrs;
 
-    public ReferenceTable(Model m, int n, int nn, int c, int d){
-        csp = m;
+    public ReferenceTable(CSP m, int n, int nn, int c, int d){
+        csp = m.csp;
         rows=n; cols=nn; domain=d;
         minCard = c; maxCard=cols;
         has_nulls = !(minCard==maxCard);
@@ -26,6 +27,9 @@ public class ReferenceTable {
         if (has_nulls) ptr_matrix = csp.intVarMatrix(rows, cols, 0,domain);
             else ptr_matrix = csp.intVarMatrix(rows, cols, 1,domain);
         occ_matrix = csp.intVarMatrix(rows, domain+1, 0, cols);
+        
+        nullptrs = new IntVar[nn];
+        for(int i=0;i<nn;i++) nullptrs[i] = m.nullptr;
 
         // Constraints
         int[] values = IntStream.range(0, d+1).toArray();
