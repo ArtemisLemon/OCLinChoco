@@ -8,7 +8,7 @@ import org.chocosolver.util.tools.ArrayUtils;
 
 import java.util.stream.IntStream;
 
-public class ReferenceTable {
+public class ReferenceTable implements NavTable {
     int rows,cols,domain;
     int minCard, maxCard; boolean has_nulls;
 
@@ -35,5 +35,9 @@ public class ReferenceTable {
         int[] values = IntStream.range(0, d+1).toArray();
         for(int i=0;i<n;i++) 
             csp.globalCardinality(ptr_matrix[i], values, occ_matrix[i], true).post();
+    }
+
+    public IntVar[] navTable(){
+        return ArrayUtils.concat(nullptrs, ArrayUtils.flatten(ptr_matrix));
     }
 }
