@@ -37,7 +37,27 @@ public class ReferenceTable implements NavTable {
             csp.globalCardinality(ptr_matrix[i], values, occ_matrix[i], true).post();
     }
 
+    //navTable Methods
     public IntVar[] navTable(){
         return ArrayUtils.concat(nullptrs, ArrayUtils.flatten(ptr_matrix));
+    }
+    public int cols(){return cols;}
+    public int lb(){
+        if(!has_nulls) return 1;
+        return 0;
+    }
+    public int ub(){
+        return domain;
+    }
+
+    class AdjList implements Source {
+        IntVar[] vars;
+        private AdjList(IntVar[] vars){
+            this.vars=vars;
+        }
+        public IntVar[] srcVars(){return vars;}
+    }
+    public AdjList adjList(int objId){
+        return new AdjList(ptr_matrix[objId-1]);
     }
 }
