@@ -10,4 +10,6 @@ public class CSP{
         csp = new Model();
         nullptr = csp.intVar(0);
     }
+
+    public Model model(){return csp;}
 }
