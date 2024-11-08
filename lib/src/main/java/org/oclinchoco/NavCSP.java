@@ -1,10 +1,11 @@
 package org.oclinchoco;
 import org.oclinchoco.types.Source;
 import org.oclinchoco.types.NavTable;
+import org.oclinchoco.types.Sequence;
 import org.chocosolver.solver.*;
 import org.chocosolver.solver.variables.IntVar;
 
-public class NavCSP implements Source {
+public class NavCSP implements Source, Sequence {
     IntVar[] vars;
     
     public NavCSP(CSP m, Source src, NavTable table){
@@ -20,7 +21,10 @@ public class NavCSP implements Source {
         }
     }
 
-    public IntVar[] srcVars (){
-        return vars;
-    }
+    //Source
+    public IntVar[] srcVars (){return vars;}
+
+    //Sequence & Collection
+    public IntVar first(){return vars[0];} //ToDo AFD Constraints!!!!!
+    public IntVar size(){return vars[0];} //Todo
 }
