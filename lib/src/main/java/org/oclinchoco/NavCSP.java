@@ -1,4 +1,6 @@
 package org.oclinchoco;
+import org.oclinchoco.types.Source;
+import org.oclinchoco.types.NavTable;
 import org.chocosolver.solver.*;
 import org.chocosolver.solver.variables.IntVar;
 
