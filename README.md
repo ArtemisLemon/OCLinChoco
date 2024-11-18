@@ -3,13 +3,24 @@ AIMT : OCL 2 CSP 4 ATLc
 
 **OCL nodes** modeled as **CSPs** using **Choco-Solver**
 
-## Compile & Run
-```bash
-# build
-./gradlew build
+## How get Lib
+Download release and copy to Gradle Project root
 
-# run
-./gradlew run
+To get latest version
+```bash
+# download latest version
+git submodule add git@github.com:ArtemisLemon/OCLinChoco.git OCLinChoco
+# update
+git submodule --update
+```
+```groovy
+//add to settings.gradle
+include('OCLinChoco:lib')
+
+//add to build.gradle
+dependencies {
+    implementation project(':OCLinChoco:lib')
+}
 ```
 
 ## Variables as Pointers
