@@ -8,7 +8,7 @@ AIMT : OCL 2 CSP 4 ATLc
 # download latest version
 git submodule add git@github.com:ArtemisLemon/OCLinChoco.git OCLinChoco
 # update
-git submodule --update
+git submodule update --remote
 ```
 ```groovy
 //add to settings.gradle
