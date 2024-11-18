@@ -28,8 +28,8 @@ examples:
 
 ## Variables as Pointers
 The foundation of these CSP models is encoding references with integer variables lists.
-
-
+- See [ReferenceTable](https://github.com/ArtemisLemon/OCLinChoco/blob/master/lib/src/main/java/org/oclinchoco/ReferenceTable.java) for model of UML (.xcore)
+- See [NavCSP](https://github.com/ArtemisLemon/OCLinChoco/blob/master/lib/src/main/java/org/oclinchoco/NavCSP.java) for navigation model, key to modeling ocl queries and structural constraints upon them.
 <!-- ## OCL support
 
 - [ ] Collections
