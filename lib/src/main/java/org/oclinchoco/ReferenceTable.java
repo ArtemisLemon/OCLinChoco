@@ -39,6 +39,28 @@ public class ReferenceTable implements NavTable {
             csp.globalCardinality(ptr_matrix[i], values, occ_matrix[i], true).post();
     }
 
+    // public static void Opposites(CSP m, ReferenceTable a, ReferenceTable b){
+    //     int al = a.length;
+    //     int bl = b.length;
+    //     IntVar[][] aocc = m.intVarMatrix(al, bl, 0,magic);
+    //     int[] avals = new int[bl];
+    //     for(int i=0;i<bl;i++) avals[i]=(i);
+    //     for(int i=0;i<al;i++){
+    //         m.globalCardinality(a[i],avals,aocc[i],false).post();
+    //     }
+        
+    //     IntVar[][] bocc = m.intVarMatrix(bl, al, 0,magic);
+    //     int[] bvals = new int[al];
+    //     for(int i=0;i<al;i++) bvals[i]=(i);
+    //     for(int i=0;i<bl;i++){
+    //         m.globalCardinality(b[i],bvals,bocc[i],false).post();
+    //     }
+
+    //     for(int i=0;i<al;i++) for(int j=0;j<bl;j++){
+    //         m.ifOnlyIf(m.arithm(aocc[i][j], ">",0), m.arithm(bocc[j][i], ">",0));
+    //     }
+    // }
+
     //navTable Methods
     public IntVar[] navTable(){
         return ArrayUtils.concat(nullptrs, ArrayUtils.flatten(ptr_matrix));
