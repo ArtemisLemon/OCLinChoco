@@ -22,6 +22,9 @@ dependencies {
     implementation project(':OCLinChoco:lib')
 }
 ```
+examples:
+- [example project using lib](https://github.com/ArtemisLemon/OCLinChoco_Tester)
+- [ZooSolver](https://github.com/ArtemisLemon/ZooSolver) building CSPs from .xcore and .atl
 
 ## Variables as Pointers
 The foundation of these CSP models is encoding references with integer variables lists.
