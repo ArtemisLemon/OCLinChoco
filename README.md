@@ -4,9 +4,6 @@ AIMT : OCL 2 CSP 4 ATLc
 **OCL nodes** modeled as **CSPs** using **Choco-Solver**
 
 ## How get Lib
-Download release and copy to Gradle Project root
-
-To get latest version
 ```bash
 # download latest version
 git submodule add git@github.com:ArtemisLemon/OCLinChoco.git OCLinChoco
