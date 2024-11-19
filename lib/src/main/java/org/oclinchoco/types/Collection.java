@@ -3,4 +3,6 @@ import org.chocosolver.solver.variables.IntVar;
 
 public interface Collection {
     public IntVar size();
+    public IntVar max();
+    public IntVar min();
 }

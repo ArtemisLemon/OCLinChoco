@@ -27,4 +27,6 @@ public class NavCSP implements Source, Sequence {
     //Sequence & Collection
     public IntVar first(){return vars[0];} //ToDo AFD Constraints!!!!!
     public IntVar size(){return vars[0];} //Todo
+    public IntVar max(){return vars[0];} //Todo
+    public IntVar min(){return vars[0];} //Todo
 }
