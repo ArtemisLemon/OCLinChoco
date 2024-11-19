@@ -32,9 +32,9 @@ public class NavCSP implements Source, Sequence {
         // Collection Attribute Constraints
         size = vars[0].mul(-1).add(vars.length).intVar();
         min = m.csp.intVar(table.lb(),table.ub());
-        m.csp.min(min,vars);
+        m.csp.min(min,vars).post();
         max = m.csp.intVar(table.lb(),table.ub());
-        m.csp.max(max,vars);
+        m.csp.max(max,vars).post();
     }
 
     //Source
