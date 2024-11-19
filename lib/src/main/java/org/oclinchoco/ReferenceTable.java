@@ -38,7 +38,7 @@ public class ReferenceTable implements NavTable {
         // Constraints
         domain_values = IntStream.range(0, d+1).toArray();
         for(int i=0;i<n;i++) 
-            csp.globalCardinality(ptr_matrix[i], values, occ_matrix[i], true).post();
+            csp.globalCardinality(ptr_matrix[i], domain_values, occ_matrix[i], true).post();
     }
 
     // public static void Opposites(CSP m, ReferenceTable a, ReferenceTable b){
