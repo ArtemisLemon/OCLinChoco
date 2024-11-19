@@ -6,4 +6,5 @@ public interface NavTable {
     public int cols();
     public int lb();
     public int ub();
+    public int[] domain_values();
 }
