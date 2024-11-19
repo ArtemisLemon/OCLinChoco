@@ -14,6 +14,8 @@ public class ReferenceTable implements NavTable {
     int rows,cols,domain;
     int minCard, maxCard; boolean has_nulls;
 
+    int[] domain_values;
+
     Model csp;
     IntVar[][] ptr_matrix;
     IntVar[][] occ_matrix;
@@ -34,7 +36,7 @@ public class ReferenceTable implements NavTable {
         for(int i=0;i<nn;i++) nullptrs[i] = m.nullptr;
 
         // Constraints
-        int[] values = IntStream.range(0, d+1).toArray();
+        domain_values = IntStream.range(0, d+1).toArray();
         for(int i=0;i<n;i++) 
             csp.globalCardinality(ptr_matrix[i], values, occ_matrix[i], true).post();
     }
@@ -70,9 +72,8 @@ public class ReferenceTable implements NavTable {
         if(!has_nulls) return 1;
         return 0;
     }
-    public int ub(){
-        return domain;
-    }
+    public int ub(){return domain;}
+    public int[] domain_values(){return domain_values;}
 
     class AdjList implements Source {
         IntVar[] vars;
