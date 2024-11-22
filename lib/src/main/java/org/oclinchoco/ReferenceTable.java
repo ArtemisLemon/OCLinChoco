@@ -5,6 +5,7 @@ package org.oclinchoco;
 import org.oclinchoco.types.Source;
 import org.oclinchoco.types.NavTable;
 import org.oclinchoco.types.PropertyTable;
+import org.oclinchoco.types.Sequence;
 import org.chocosolver.solver.*;
 import org.chocosolver.solver.variables.IntVar;
 import org.chocosolver.util.tools.ArrayUtils;
@@ -19,6 +20,7 @@ public class ReferenceTable implements PropertyTable, NavTable {
     IntVar[][] ptr_matrix;
     IntVar[][] occ_matrix;
     IntVar[] nullptrs;
+    IntVar[] sizes;
 
     public ReferenceTable(CSP m, int n, int nn, int c, int d){
         csp = m.csp;
@@ -31,13 +33,19 @@ public class ReferenceTable implements PropertyTable, NavTable {
             else ptr_matrix = csp.intVarMatrix(rows, cols, 1,domain);
         occ_matrix = csp.intVarMatrix(rows, domain+1, 0, cols);
         
-        nullptrs = new IntVar[nn];
-        for(int i=0;i<nn;i++) nullptrs[i] = m.nullptr;
-
         // Constraints
         int[] values = IntStream.range(0, d+1).toArray();
         for(int i=0;i<n;i++) 
             csp.globalCardinality(ptr_matrix[i], values, occ_matrix[i], true).post();
+        
+        // NavTable Variables
+        nullptrs = new IntVar[nn];
+        for(int i=0;i<nn;i++) nullptrs[i] = m.nullptr;
+
+        // Collection Variables And Constraints
+        sizes = new IntVar[n];
+        for(int i=0;i<n;i++) sizes[i] = occ_matrix[i][0].mul(-1).add(nn).intVar();
+
     }
 
     // public static void Opposites(CSP m, ReferenceTable a, ReferenceTable b){
@@ -75,15 +83,19 @@ public class ReferenceTable implements PropertyTable, NavTable {
         return domain;
     }
 
-    class AdjList implements Source {
+    class AdjList implements Source, Sequence {
         IntVar[] vars;
-        private AdjList(IntVar[] vars){
+        IntVar size;
+        private AdjList(IntVar[] vars, IntVar size){
             this.vars=vars;
+            this.size=size;
         }
         public IntVar[] srcVars(){return vars;}
+        public IntVar size(){return size;}
+        public IntVar first(){return vars[0];}
     }
     public AdjList adjList(int objId){
-        return new AdjList(ptr_matrix[objId-1]);
+        return new AdjList(ptr_matrix[objId-1],sizes[objId-1]);
     }
 
     public void loadData(int[][] data){
