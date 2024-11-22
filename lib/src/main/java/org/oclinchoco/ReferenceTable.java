@@ -4,13 +4,14 @@
 package org.oclinchoco;
 import org.oclinchoco.types.Source;
 import org.oclinchoco.types.NavTable;
+import org.oclinchoco.types.PropertyTable;
 import org.chocosolver.solver.*;
 import org.chocosolver.solver.variables.IntVar;
 import org.chocosolver.util.tools.ArrayUtils;
 
 import java.util.stream.IntStream;
 
-public class ReferenceTable implements NavTable {
+public class ReferenceTable implements PropertyTable, NavTable {
     int rows,cols,domain;
     int minCard, maxCard; boolean has_nulls;
 
@@ -83,5 +84,11 @@ public class ReferenceTable implements NavTable {
     }
     public AdjList adjList(int objId){
         return new AdjList(ptr_matrix[objId-1]);
+    }
+
+    public void loadData(int[][] data){
+        for(int i=0;i<rows;i++) for(int j=0;j<cols;j++){
+            csp.arithm(ptr_matrix[i][j], "=", data[i][j]).post();
+        }
     }
 }
