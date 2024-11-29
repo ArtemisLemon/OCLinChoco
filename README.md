@@ -2,6 +2,7 @@
 AIMT : OCL 2 CSP 4 ATLc
 
 **OCL nodes** modeled as **CSPs** using **Choco-Solver**
+And models for **UML Object Properties** to solve **OCL Constraints** upon.
 
 ## How get Lib
 ```bash
