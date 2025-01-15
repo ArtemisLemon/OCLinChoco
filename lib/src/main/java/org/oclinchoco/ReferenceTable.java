@@ -37,7 +37,13 @@ public class ReferenceTable implements NavTable {
         // Constraints
         int[] values = IntStream.range(0, d+1).toArray();
         for(int i=0;i<n;i++) 
-            csp.globalCardinality(ptr_matrix[i], values, occ_matrix[i], true).post();
+            csp.globalCardinality(ptr_matrix[i], values, occ_matrix[i], true).post();//ptr model = occ model
+
+        // for(int i=0;i<rows;i++)for(int j=0;j<minCard;j++) csp.arithm(ptr_matrix[i][j],"!=",0).post(); //remove null ptr from the ptrs < minCard
+        try{
+            System.out.println("removing null pointer from variable domain");
+            for(int i=0;i<rows;i++)for(int j=0;j<minCard;j++) ptr_matrix[i][j].updateLowerBound(1, null); //remove null ptr from the ptrs < minCard
+        } catch(Exception e){System.out.println("Contradiction");}
     }
 
     // public static void Opposites(CSP m, ReferenceTable a, ReferenceTable b){
