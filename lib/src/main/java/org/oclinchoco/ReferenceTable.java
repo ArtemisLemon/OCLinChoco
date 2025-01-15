@@ -86,4 +86,16 @@ public class ReferenceTable implements NavTable {
     public AdjList adjList(int objId){
         return new AdjList(ptr_matrix[objId-1]);
     }
+
+    @Override
+    public String toString() {
+        String out = "";
+        for(int i=0;i<rows;i++){
+            for(int j=0;j<cols;j++){
+                out += ptr_matrix[i][j] + ", ";
+            }
+            out += "\n";
+        }
+        return out;
+    }
 }
