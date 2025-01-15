@@ -1,14 +1,13 @@
 package org.oclinchoco;
 import org.oclinchoco.property.NavTable;
-import org.oclinchoco.source.NavSource;
+import org.oclinchoco.source.PtrSource;
 import org.oclinchoco.source.Source;
-import org.chocosolver.solver.*;
 import org.chocosolver.solver.variables.IntVar;
 
 public class NavCSP implements Source {
     IntVar[] vars;
     
-    public NavCSP(CSP m, NavSource src, NavTable table){
+    public NavCSP(CSP m, PtrSource src, NavTable table){
         int n = src.pointers().length;
         int nn = table.cols();
         int nnn = n*nn;
