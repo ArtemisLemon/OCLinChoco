@@ -21,7 +21,6 @@ public class ReferenceTable implements NavTable {
     IntVar[][] ptr_matrix;
     IntVar[][] occ_matrix;
     IntVar[] nullptrs;
-    IntVar[] sizes;
 
     public ReferenceTable(CSP m, int n, int nn, int c, int d){
         csp = m.csp;
@@ -47,7 +46,7 @@ public class ReferenceTable implements NavTable {
 
         // NavTable Variables
         nullptrs = new IntVar[nn];
-        for(int i=0;i<nn;i++) nullptrs[i] = m.nullptr;9
+        for(int i=0;i<nn;i++) nullptrs[i] = m.nullptr;
     }
 
     // public static void Opposites(CSP m, ReferenceTable a, ReferenceTable b){
@@ -87,16 +86,14 @@ public class ReferenceTable implements NavTable {
 
     class AdjList implements PtrSource {
         IntVar[] vars;
-        IntVar size;
-        private AdjList(IntVar[] vars, IntVar size){
+        private AdjList(IntVar[] vars){
             this.vars=vars;
-            this.size=size;
         }
         @Override //PtrSource
         public IntVar[] pointers(){return vars;}
     }
     public AdjList adjList(int objId){
-        return new AdjList(ptr_matrix[objId-1],sizes[objId-1]);
+        return new AdjList(ptr_matrix[objId-1]);
     }
 
 
