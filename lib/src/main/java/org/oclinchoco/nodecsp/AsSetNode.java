@@ -1,30 +1,28 @@
 package org.oclinchoco.nodecsp;
 import org.chocosolver.solver.variables.IntVar;
 import org.oclinchoco.CSP;
+import org.oclinchoco.source.OccSource;
 import org.oclinchoco.source.PtrSource;
 import org.oclinchoco.source.Source;
 
-public class AsSetNode {
-    IntVar[] vars;
-    IntVar[] occs;
-    IntVar[] occSet;
-    
-    public AsSetNode(CSP m, PtrSource src){
-        int n = src.pointers().length; 
-        int nn;
-        // //ToDo
-        // // init Vars, needs some more info about src
-        // vars = m.intVarArray(n,0,100);
-        // // occs = m.intVarArray(nn,0,100);
-        // // occSet = m.intVarArray(nn,0,100);
+public class AsSetNode implements OccSource {
+    IntVar[] occ;
+    public AsSetNode(CSP csp, OccSource src){
+        //Variables
+        occ = csp.model().intVarArray(src.occurences().length, 0, src.maxCard());
+        try{
+            for(int i=1;i<occ.length;i++){
+                occ[i].updateUpperBound(1, null); //max occurences for everyting but nullptr is 1
+            }
+        } catch (Exception e){};
 
-        // //apply AllDiff execpt nullptr/outbound to vars
-        // m.allDifferentExcept0(vars); //asSet()
-        // //srcVars include vars //vars include srcVars
-        // for(int i=0;i<nn;i++) m.ifOnlyIf(m.arithm(occs[i],"!=",0),m.arithm(occSet[i],"!=",0));
+        //Constraints
+        for(int i=1;i<occ.length;i++) csp.ZeroIFFZero(occ[i], src.occurences()[i]);
 
-        // // Connect Vars with OCCs GCC
-        // // m.globalCardinality(src.srcVars(),src.values(),occs);
-        // // m.globalCardinality(vars,src.values(),occSet);
     }
+
+    @Override
+    public int maxCard() {return occ.length-1;} //-1 because we don't need to count the null ptr collum
+    @Override
+    public IntVar[] occurences() { return occ;}
 }
