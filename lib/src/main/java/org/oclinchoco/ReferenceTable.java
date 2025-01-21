@@ -14,29 +14,32 @@ import org.chocosolver.util.tools.ArrayUtils;
 import java.util.stream.IntStream;
 
 public class ReferenceTable implements NavTable {
-    int rows,cols,domain;
-    int minCard, maxCard; boolean has_nulls;
+    final int rows,cols,ub,lb; //number of squares and possible numbers in them
+    final int minCard, maxCard; boolean has_nulls; //Reference Cardinality
 
-    Model csp;
+    Model csp; //Choco Model
     IntVar[][] ptr_matrix;
     IntVar[][] occ_matrix;
     IntVar[] nullptrs;
+    int[] values;
 
-    public ReferenceTable(CSP m, int n, int nn, int c, int d){
+    public ReferenceTable(CSP m, int number_of_objects, int max_card, int min_card, int number_of_targets){
         csp = m.csp;
-        rows=n; cols=nn; domain=d;
-        minCard = c; maxCard=cols;
+        minCard = min_card; maxCard=max_card;
         has_nulls = !(minCard==maxCard);
 
+        rows=number_of_objects; cols=max_card; ub=number_of_targets;
+        if(has_nulls) lb=0; else lb=1;
+        
+        values = IntStream.range(0, ub+1).toArray(); //possible pointer values to count with GCC (+1 for range())
+
         // Variables
-        if (has_nulls) ptr_matrix = csp.intVarMatrix(rows, cols, 0,domain);
-            else ptr_matrix = csp.intVarMatrix(rows, cols, 1,domain);
-        occ_matrix = csp.intVarMatrix(rows, domain+1, 0, cols);
+        ptr_matrix = csp.intVarMatrix(rows, cols, lb, ub);
+        occ_matrix = csp.intVarMatrix(rows, values.length, values[0], cols);
         
         // Constraints
-        int[] values = IntStream.range(0, d+1).toArray();
-        for(int i=0;i<n;i++) 
-            csp.globalCardinality(ptr_matrix[i], values, occ_matrix[i], true).post();//ptr model = occ model
+        for(int i=0;i<rows;i++) 
+            csp.globalCardinality(ptr_matrix[i], values, occ_matrix[i], true).post();//ptr model = occ model //closed because we have var for each
 
         // for(int i=0;i<rows;i++)for(int j=0;j<minCard;j++) csp.arithm(ptr_matrix[i][j],"!=",0).post(); //remove null ptr from the ptrs < minCard
         try{
@@ -45,26 +48,21 @@ public class ReferenceTable implements NavTable {
         } catch(Exception e){System.out.println("Contradiction");}
 
         // NavTable Variables
-        nullptrs = new IntVar[nn];
-        for(int i=0;i<nn;i++) nullptrs[i] = m.nullptr;
+        nullptrs = new IntVar[cols];
+        for(int i=0;i<cols;i++) nullptrs[i] = m.nullptr;
     }
 
-    // public static void Opposites(CSP m, ReferenceTable a, ReferenceTable b){
-    //     int al = a.length;
-    //     int bl = b.length;
-    //     IntVar[][] aocc = m.intVarMatrix(al, bl, 0,magic);
+    // public static void Opposites(CSP m, ReferenceTable a, ReferenceTable b){        
+    //     int al = a.rows;
+    //     int bl = b.rows;
+    //     IntVar[][] aocc = a.occ_matrix;
     //     int[] avals = new int[bl];
     //     for(int i=0;i<bl;i++) avals[i]=(i);
-    //     for(int i=0;i<al;i++){
-    //         m.globalCardinality(a[i],avals,aocc[i],false).post();
-    //     }
         
     //     IntVar[][] bocc = m.intVarMatrix(bl, al, 0,magic);
     //     int[] bvals = new int[al];
     //     for(int i=0;i<al;i++) bvals[i]=(i);
-    //     for(int i=0;i<bl;i++){
-    //         m.globalCardinality(b[i],bvals,bocc[i],false).post();
-    //     }
+
 
     //     for(int i=0;i<al;i++) for(int j=0;j<bl;j++){
     //         m.ifOnlyIf(m.arithm(aocc[i][j], ">",0), m.arithm(bocc[j][i], ">",0));
@@ -79,10 +77,10 @@ public class ReferenceTable implements NavTable {
     public int cols(){return cols;}
     
     @Override //NavTable
-    public int lb(){ if(!has_nulls) return 1; return 0; }
+    public int lb(){ return lb; }
 
     @Override //NavTable
-    public int ub(){return domain;}
+    public int ub(){return ub;}
 
     class AdjList implements PtrSource {
         IntVar[] vars;
