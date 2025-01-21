@@ -17,4 +17,5 @@ public class CSP{
     }
 
     public Model model(){return csp;}
+    public IntVar nullptr(){return nullptr;}
 }
