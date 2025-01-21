@@ -1,11 +1,13 @@
 package org.oclinchoco.nodecsp;
+import org.chocosolver.solver.variables.BoolVar;
 import org.chocosolver.solver.variables.IntVar;
+import org.oclinchoco.CSP;
+import org.oclinchoco.source.VarSource;
 
-public class ArithmNode { //maybe an interface ?!
-    IntVar var; //?
+public class ArithmNode {
+    // BoolVar reifed;
     
-    public ArithmNode(){
-        //ToDo
-        // Look at Choco's Arithm AST stuff
+    public ArithmNode(CSP csp, VarSource left, VarSource right, String op){
+        csp.model().arithm(left.var(), op, right.var()).post();
     }
 }
