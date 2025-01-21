@@ -52,22 +52,22 @@ public class ReferenceTable implements NavTable {
         for(int i=0;i<cols;i++) nullptrs[i] = m.nullptr;
     }
 
-    // public static void Opposites(CSP m, ReferenceTable a, ReferenceTable b){        
-    //     int al = a.rows;
-    //     int bl = b.rows;
-    //     IntVar[][] aocc = a.occ_matrix;
-    //     int[] avals = new int[bl];
-    //     for(int i=0;i<bl;i++) avals[i]=(i);
-        
-    //     IntVar[][] bocc = m.intVarMatrix(bl, al, 0,magic);
-    //     int[] bvals = new int[al];
-    //     for(int i=0;i<al;i++) bvals[i]=(i);
 
 
-    //     for(int i=0;i<al;i++) for(int j=0;j<bl;j++){
-    //         m.ifOnlyIf(m.arithm(aocc[i][j], ">",0), m.arithm(bocc[j][i], ">",0));
-    //     }
-    // }
+    //This function applies the Opposite CSP between two Reference Tables
+    //say class A{B[] connectedBs opposite singleA}, class B{A singleA opposite connectedBs}
+    //connectedBs being the opposite of singleA means: if for A1 connectedBs=[3,4,5], then for B3,B4 and B5 singleA=[1] 
+    public static void Opposites(CSP csp, ReferenceTable a, ReferenceTable b){  
+        Model m = csp.model();      
+        int al = a.rows;
+        IntVar[][] aocc = a.occ_matrix;
+        int bl = b.rows;
+        IntVar[][] bocc = b.occ_matrix;
+
+        for(int i=0;i<al;i++) for(int j=0;j<bl;j++){
+            m.ifOnlyIf(m.arithm(aocc[i][j], ">",0), m.arithm(bocc[j][i], ">",0));
+        }
+    }
 
     @Override //NavTable
     public IntVar[] navTable(){
