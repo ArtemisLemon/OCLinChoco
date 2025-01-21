@@ -21,4 +21,7 @@ public class NavCSP implements PtrSource {
 
     @Override
     public IntVar[] pointers() {return vars;}
+
+    @Override
+    public int maxCard() { return vars.length; }
 }
