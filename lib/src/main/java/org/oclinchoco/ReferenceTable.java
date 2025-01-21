@@ -83,15 +83,18 @@ public class ReferenceTable implements NavTable {
     public int ub(){return ub;}
 
     class AdjList implements PtrSource {
-        IntVar[] vars;
-        private AdjList(IntVar[] vars){
-            this.vars=vars;
+        int objId;
+        ReferenceTable table;
+        private AdjList(int objId,ReferenceTable table){
+            this.table=table;
         }
         @Override //PtrSource
-        public IntVar[] pointers(){return vars;}
+        public IntVar[] pointers(){return table.ptr_matrix[objId-1];}
+        @Override //Source
+        public int maxCard() {return table.maxCard;}
     }
     public AdjList adjList(int objId){
-        return new AdjList(ptr_matrix[objId-1]);
+        return new AdjList(objId,this);
     }
 
 
