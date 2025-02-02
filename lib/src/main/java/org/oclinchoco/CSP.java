@@ -3,13 +3,10 @@ import java.util.HashMap;
 
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.variables.IntVar;
-import org.oclinchoco.source.Source;
 
 public class CSP{
     Model csp;
     IntVar nullptr;
-
-    HashMap<String,Source> nodes;
 
     public CSP(){
         csp = new Model();
@@ -18,7 +15,6 @@ public class CSP{
 
     public Model model(){return csp;}
     public IntVar nullptr(){return nullptr;}
-
 
     //To Move?
     public void ZeroIFFZero(IntVar x, IntVar y){ //x=0 <-> y=0
