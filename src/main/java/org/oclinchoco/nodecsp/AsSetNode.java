@@ -1,7 +1,9 @@
 package org.oclinchoco.nodecsp;
+import java.util.Arrays;
 import java.util.stream.IntStream;
 
 import org.chocosolver.solver.variables.IntVar;
+import org.chocosolver.util.tools.ArrayUtils;
 import org.oclinchoco.CSP;
 import org.oclinchoco.source.OccSource;
 import org.oclinchoco.source.PtrSource;
@@ -15,19 +17,27 @@ public class AsSetNode implements OccSource {
         occ = SetModel(csp, src.occurences().length, src.maxCard());
         //Constraints
         for(int i=1;i<occ.length;i++) csp.ZeroIFFZero(occ[i], src.occurences()[i]);
+
+        nullptrcount(csp);
     }
 
     public AsSetNode(CSP csp, PtrSource src){
         //Intermediate Variables and Constraints to complete Src Model
         int[] values = IntStream.range(0,src.pointers()[0].getUB()+1).toArray(); //Using src.pointers()[0].getUB because normally at this point (while building the model), we haven't removed any values from the domain
         IntVar[] src_occ = csp.model().intVarArray(values.length, 0,src.maxCard());
-        csp.model().globalCardinality(src.pointers(), values, src_occ, true);
+        csp.model().globalCardinality(src.pointers(), values, src_occ, true).post();;
 
         //Variables
         occ = SetModel(csp, values.length, src.pointers().length);
         //Constraints
         for(int i=1;i<occ.length;i++) csp.ZeroIFFZero(occ[i], src_occ[i]);
+        
+        nullptrcount(csp);
+    }
 
+    void nullptrcount(CSP csp){
+        IntVar[] notnullcount = Arrays.copyOfRange(occ, 1, occ.length);
+        csp.model().count(0, notnullcount, occ[0]).post();
     }
 
     @Override
