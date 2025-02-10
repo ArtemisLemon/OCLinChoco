@@ -43,9 +43,9 @@ public class ReferenceTable implements NavTable {
 
         // for(int i=0;i<rows;i++)for(int j=0;j<minCard;j++) csp.arithm(ptr_matrix[i][j],"!=",0).post(); //remove null ptr from the ptrs < minCard
         try{
-            System.out.println("removing null pointer from variable domain");
+            // System.out.println("removing null pointer from variable domain");
             for(int i=0;i<rows;i++)for(int j=0;j<minCard;j++) ptr_matrix[i][j].updateLowerBound(1, null); //remove null ptr from the ptrs < minCard
-        } catch(Exception e){System.out.println("Contradiction");}
+        } catch(Exception e){System.out.println("Contradiction when removing null pointers");}
 
         // NavTable Variables
         nullptrs = new IntVar[cols];
@@ -65,7 +65,7 @@ public class ReferenceTable implements NavTable {
         IntVar[][] bocc = b.occ_matrix;
 
         for(int i=0;i<al;i++) for(int j=0;j<bl;j++){
-            m.ifOnlyIf(m.arithm(aocc[i][j], ">",0), m.arithm(bocc[j][i], ">",0));
+            m.ifOnlyIf(m.arithm(aocc[i][j+1], ">",0), m.arithm(bocc[j][i+1], ">",0));
         }
     }
 
@@ -82,16 +82,35 @@ public class ReferenceTable implements NavTable {
     @Override //NavTable
     public int ub(){return ub;}
 
-    class AdjList implements PtrSource {
+    public class AdjList implements PtrSource {
         int objId;
         ReferenceTable table;
         private AdjList(int objId,ReferenceTable table){
+            this.objId=objId;
             this.table=table;
         }
         @Override //PtrSource
         public IntVar[] pointers(){return table.ptr_matrix[objId-1];}
         @Override //Source
         public int maxCard() {return table.maxCard;}
+
+        public void loadData(int[] data){
+            // System.out.println("Object ID: "+objId);
+            for(int i=0;i<table.cols;i++){
+                if(data[i]!=-1){
+                    // System.out.println("AdjList LoadData");
+                    try{pointers()[i].updateBounds(data[i], data[i], null);}
+                    catch(Exception e){System.out.println("Contradiction when loading data:\nVariable Domain: "+pointers()[i]+"\nData:"+data[i] );}
+
+                }
+            }
+        }
+
+        public int[] getData(){
+            int[] out = new int[table.cols];
+            for(int i=0;i<cols;i++) out[i] = pointers()[i].getValue();
+            return out;
+        }
     }
     public AdjList adjList(int objId){
         return new AdjList(objId,this);
@@ -101,7 +120,10 @@ public class ReferenceTable implements NavTable {
     
     public void loadData(int[][] data){
         for(int i=0;i<rows;i++) for(int j=0;j<cols;j++){
-            csp.arithm(ptr_matrix[i][j], "=", data[i][j]).post();
+            try {
+                ptr_matrix[i][j].updateBounds(data[i][j], data[i][j], null);
+            } catch (Exception e){System.out.println("Contradiction when loading data");}
+            // csp.arithm(ptr_matrix[i][j], "=", data[i][j]).post();
         }
     }
 
@@ -110,7 +132,7 @@ public class ReferenceTable implements NavTable {
         String out = "";
         for(int i=0;i<rows;i++){
             for(int j=0;j<cols;j++){
-                out += ptr_matrix[i][j] + ", ";
+                out += ptr_matrix[i][j] + " ";
             }
             out += "\n";
         }
