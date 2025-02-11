@@ -6,15 +6,20 @@ import org.chocosolver.solver.variables.IntVar;
 
 public class CSP{
     Model csp;
+    static final public int MIN_BOUND = IntVar.MIN_INT_BOUND/2 -1;
+    static final public int MAX_BOUND = IntVar.MAX_INT_BOUND/2; 
     IntVar nullptr;
+    IntVar nullattrib;
 
     public CSP(){
         csp = new Model();
         nullptr = csp.intVar(0);
+        nullattrib = csp.intVar(MIN_BOUND);
     }
 
     public Model model(){return csp;}
     public IntVar nullptr(){return nullptr;}
+    public IntVar nullattrib(){return nullattrib;}
 
     //To Move?
     public void ZeroIFFZero(IntVar x, IntVar y){ //x=0 <-> y=0
