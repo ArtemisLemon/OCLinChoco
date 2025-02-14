@@ -1,0 +1,32 @@
+@startuml
+
+interface PtrSource{
+    IntVar[] ptr()
+}
+
+interface NavTable{
+    IntVar[] navTable()
+    int rows(), cols()
+    int lb(), ub()
+}
+class PtrTable implements NavTable{}
+class VarTable implements NavTable{}
+
+class NavCSP {
+    IntVar[|src.ptr| * prop.cols] vars;
+    
+    for(i <|src.ptr|, j<prop.cols) k++
+        off = src.ptr(i) * prop.cols + j
+        element(off,prop.navTable,vars[k])    
+}
+PtrSource <-- NavCSP : src
+NavTable <-- NavCSP : prop
+
+class Nav2Ptr extends NavCSP implements PtrSource{}
+class Nav2Var extends NavCSP implements VarSource{}
+
+note "depending on the type of the NavTable Implementation,\n we make a different type of NavCSP" as N1
+VarTable .. N1
+Nav2Var .. N1
+
+@enduml

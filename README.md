@@ -28,7 +28,7 @@ The foundation of these CSP models is encoding references with integer variables
 - See [RefTable](https://github.com/ArtemisLemon/OCLinChoco/blob/master/src/main/java/org/oclinchoco/property/ReferenceTable.java) for model of references
 - See [NavCSP](https://github.com/ArtemisLemon/OCLinChoco/blob/master/src/main/java/org/oclinchoco/navigation/NavCSP.java) for navigation model, key to modeling ocl queries and structural constraints upon them.
 
-<img src="overview.svg" alt="see diagrams" width=100%/>
+<img src="readme/overview.svg" alt="see diagrams" width=100%/>
 
 ## UML and OCP support
 - UML

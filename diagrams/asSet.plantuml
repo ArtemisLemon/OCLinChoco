@@ -1,0 +1,17 @@
+@startuml
+
+interface OccSource{
+    IntVar[] occ()
+}
+
+
+class AsSetNode {
+    IntVar[|src.occ|] vars;
+
+    vars[i]=0 <-> src.occ()[i]=0
+    vars[0]=count(dummy, vars[1:])    
+}
+OccSource <-right- AsSetNode : src
+OccSource <|-down- AsSetNode :impl
+
+@enduml

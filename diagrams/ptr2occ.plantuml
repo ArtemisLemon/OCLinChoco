@@ -1,0 +1,20 @@
+@startuml
+
+interface PtrSource{
+    IntVar[] ptr()
+    int ub()
+}
+
+interface OccSource{
+    IntVar[] occ()
+}
+
+
+class OccRepresentation implements OccSource{
+    IntVar[src.ptr.ub] occ;
+
+    gcc(src.ptr, occ)  
+}
+PtrSource <-right- OccRepresentation : src
+
+@enduml
