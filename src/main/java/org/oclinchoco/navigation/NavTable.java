@@ -1,4 +1,4 @@
-package org.oclinchoco.property;
+package org.oclinchoco.navigation;
 import org.chocosolver.solver.variables.IntVar;
 
 public interface NavTable {

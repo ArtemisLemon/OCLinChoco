@@ -14,21 +14,24 @@ public class AsSetNode implements OccSource {
 
     public AsSetNode(CSP csp, OccSource src){
         //Variables
-        occ = SetModel(csp, src.occurences().length, src.maxCard());
+        occ = SetModel(csp, src.occurences().length);
         //Constraints
-        for(int i=1;i<occ.length;i++) csp.ZeroIFFZero(occ[i], src.occurences()[i]);
+        for(int i=0;i<occ.length;i++) csp.ZeroIFFZero(occ[i], src.occurences()[i]);
 
-        nullptrcount(csp);
+        // nullptrcount(csp);
     }
 
     public AsSetNode(CSP csp, PtrSource src){
         //Intermediate Variables and Constraints to complete Src Model
-        int[] values = IntStream.range(0,src.pointers()[0].getUB()+1).toArray(); //Using src.pointers()[0].getUB because normally at this point (while building the model), we haven't removed any values from the domain
-        IntVar[] src_occ = csp.model().intVarArray(values.length, 0,src.maxCard());
-        csp.model().globalCardinality(src.pointers(), values, src_occ, true).post();;
+        int[] values = IntStream.range(0,src.ub()+1).toArray();
+        IntVar[] src_occ = csp.model().intVarArray(values.length, 0,src.size());
+        System.out.println("Made Occurence representation for a PtrSource");
+        for(IntVar v : src.pointers()) System.out.println(v);
+        for(IntVar v : src_occ) System.out.println(v);
+        csp.model().globalCardinality(src.pointers(), values, src_occ, true).post();
 
         //Variables
-        occ = SetModel(csp, values.length, src.pointers().length);
+        occ = SetModel(csp, values.length);
         //Constraints
         for(int i=1;i<occ.length;i++) csp.ZeroIFFZero(occ[i], src_occ[i]);
         
@@ -41,7 +44,7 @@ public class AsSetNode implements OccSource {
     }
 
     @Override
-    public int maxCard() {return occ.length-1;} //-1 because we don't need to count the null ptr collum
+    public int size() {return occ.length-1;} //-1 because we don't need to count the null ptr collum
     @Override
     public IntVar[] occurences() { return occ;}
 
@@ -49,14 +52,17 @@ public class AsSetNode implements OccSource {
 
 
     // Probably should go somewhere else
-    private static IntVar[] SetModel(CSP csp, int length, int nullptr_maxcount){
-        IntVar[] out = csp.model().intVarArray(length, 0, nullptr_maxcount);
+    private static IntVar[] SetModel(CSP csp, int length){
+        IntVar[] out = csp.model().intVarArray(length, 0, length-1);
         try{ //maybe it just this part that needs to go somewhere else
             for(int i=1;i<out.length;i++){
                 out[i].updateUpperBound(1, null); //max occurences for everyting but nullptr is 1
             }
         } catch (Exception e){};
 
+
+        System.out.println("Made asSet variables");
+        for(IntVar v : out) System.out.println(v);
         return out;
     }
 }

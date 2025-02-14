@@ -6,5 +6,5 @@ public interface VarSource extends Source{
     IntVar var();
 
     @Override
-    default int maxCard(){return 1;}
+    default int size(){return 1;}
 }

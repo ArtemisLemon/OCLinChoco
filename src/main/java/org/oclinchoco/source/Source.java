@@ -1,7 +1,6 @@
 package org.oclinchoco.source;
-import org.chocosolver.solver.variables.IntVar;
+import org.oclinchoco.property.IntTable;
 
-public abstract interface Source {
-    int maxCard();
-
+public interface Source {
+    int size();
 }

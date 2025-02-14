@@ -1,34 +1,36 @@
-package org.oclinchoco;
+package org.oclinchoco.property;
 
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.variables.IntVar;
 import org.chocosolver.util.tools.ArrayUtils;
-import org.oclinchoco.property.NavTable;
-import org.oclinchoco.source.VarsSource;
+import org.oclinchoco.CSP;
+import org.oclinchoco.navigation.NavTable;
 
-public class IntTable implements NavTable {
+// abstract so you can't make it without constraints
+public abstract class IntTable implements NavTable {
     final int rows,cols; //number of squares and possible numbers in them
     final int minCard, maxCard; boolean has_nulls; //Reference Cardinality
 
     Model csp; //Choco Model
     IntVar[][] matrix;
-    IntVar[] nullattribs;
+    IntVar[] nullrow;
 
     public IntTable(CSP m, int r, int min, int max){
+        System.out.println("new IntTable");
         csp=m.model();
         rows=r; cols=max;
         minCard=min; maxCard=max; has_nulls = !(min==max);
 
-        matrix = csp.intVarMatrix(rows, cols, CSP.MIN_BOUND, CSP.MAX_BOUND);
+        // matrix = csp.intVarMatrix(rows, cols, CSP.MIN_BOUND, CSP.MAX_BOUND);
 
-        nullattribs = new IntVar[cols];
-        for(int i=0;i<cols;i++) nullattribs[i] = m.nullattrib;
+        // nullrow = new IntVar[cols];
+        // for(int i=0;i<cols;i++) nullrow[i] = m.nullattrib();
     }
 
 
     @Override
     public IntVar[] navTable() {
-        return ArrayUtils.concat(nullattribs, ArrayUtils.flatten(matrix));
+        return ArrayUtils.concat(nullrow, ArrayUtils.flatten(matrix));
     }
 
     @Override
@@ -40,24 +42,17 @@ public class IntTable implements NavTable {
     @Override
     public int ub() { return CSP.MAX_BOUND; }
 
-
-    public class IntAttribute implements VarsSource {
+    public class IntTableRow {
         int objId;
-        IntTable table;
-        private IntAttribute(int objId, IntTable table){
+        protected IntTableRow(int objId){
             this.objId=objId;
-            this.table=table;
         }
 
-        @Override //Source
-        public int maxCard() {return table.maxCard;}
-
-        @Override //VarsSource
-        public IntVar[] vars() {return table.matrix[objId-1];}
+        public IntVar[] vars() {return matrix[objId-1];}
 
         public void loadData(int[] data){
             // System.out.println("Object ID: "+objId);
-            for(int i=0;i<table.cols;i++){
+            for(int i=0;i<cols;i++){
                 if(data[i]!=-1){
                     // System.out.println("AdjList LoadData");
                     try{vars()[i].updateBounds(data[i], data[i], null);}
@@ -68,11 +63,14 @@ public class IntTable implements NavTable {
         }
 
         public int[] getData(){
-            int[] out = new int[table.cols];
+            int[] out = new int[cols];
             for(int i=0;i<cols;i++) out[i] = vars()[i].getValue();
             return out;
-        }
-        
+        }        
+    }
+
+    public IntTableRow attribute(int objId){
+        return new IntTableRow(objId);
     }
 
     @Override
