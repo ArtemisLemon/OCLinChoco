@@ -1,0 +1,71 @@
+@startuml
+
+package UMLCSP{
+
+  class IntTable implements NavTable{
+    int rows, cols
+    int minCard, maxCard
+    IntVar[][] matrix
+    IntVar[] nullrow
+  }
+  
+  class AttributeTable extends IntTable{}
+  class AttributeTableRow implements VarsSource{}
+  AttributeTable *-- AttributeTableRow
+  
+  class ReferenceTable extends IntTable {
+    int lb,ub
+    IntVar occ_matrix
+    
+  }
+  class AdjList implements PtrSource {}
+  ReferenceTable *-- AdjList
+  
+  class SingleIntTable extends IntTable{}
+  class SingleIntTableRow implements VarSource{}
+  SingleIntTable *-- SingleIntTableRow
+
+}
+
+package OCLCSP{
+  interface NavTable {
+    int lb()
+    int ub()
+    int cols()
+    IntVar[] navTable()
+  }
+  interface Source {}
+  interface PtrSource extends Source {}
+  interface OccSource extends Source {}
+  interface VarsSource extends Source {}
+  interface VarSource extends Source {}
+  interface BoolSource extends Source {}
+
+
+  class navCSP {}
+  PtrSource <-- navCSP : navsource
+  NavTable <-- navCSP : navtarget
+  
+  class nav2ptrCSP extends navCSP implements PtrSource{}
+  class nav2intsCSP extends navCSP  implements VarsSource{}
+  class nav2intCSP extends navCSP implements VarSource{}
+  
+  
+  class SizeNode implements VarSource {}
+  Source <-- SizeNode : sizesource
+  class SumNode implements VarSource {}
+  VarsSource <-- SumNode : sumsource
+  class LessThanNode implements BoolSource{}
+  VarSource <-- LessThanNode : left, right
+  
+  class PlusNode implements VarSource{}
+  VarSource <-- PlusNode : left, right
+  
+  class LogicalNode implements BoolSource{}
+  BoolSource <-- LogicalNode : left, right
+  
+  class SelfNode implements PtrSource{}
+
+}
+@enduml
+
