@@ -15,6 +15,7 @@ public class SizeNode implements VarSource{
         return switch(s){
             case PtrSource ptr -> new SizeNode(c, ptr);
             case OccSource occ -> new SizeNode(c, occ);
+            case VarsSource vars -> new SizeNode(c, vars);
             default -> throw new UnsupportedOperationException("can't get size of " + s);
         };
     }
@@ -24,10 +25,14 @@ public class SizeNode implements VarSource{
         size = ezis.mul(-1).add(s.size()).intVar();
     }
 
+    private SizeNode(CSP csp, VarsSource s){
+        ezis = csp.model().count("",csp.nullattrib().getValue(), s.vars());
+        size = ezis.mul(-1).add(s.size()).intVar();
+    }
+
     private SizeNode(CSP csp, OccSource s){
         ezis = s.occurences()[csp.nullptr().getValue()];
         size = csp.model().intVar(s.size()).sub(ezis).intVar();
-        // System.out.println("Making OccSize Node: "+ezis+" "+size);
     }
 
     @Override
