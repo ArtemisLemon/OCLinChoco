@@ -11,7 +11,7 @@ class AsSetNode {
     for(i): vars[i]=0 <-> src.occ[i]=0
     vars[0]=count(dummy, vars[1:])    
 }
-OccSource <-right- AsSetNode : src
-OccSource <|-down- AsSetNode :impl
+OccSource <-- AsSetNode : src
+OccSource <|.down. AsSetNode
 
 @enduml

@@ -1,0 +1,14 @@
+@startuml
+
+interface VarsSource{}
+
+class SumNode implements VarSource{
+    IntVar sum = y + z;
+
+    x = count(d, src.vars)
+    y = neg(d) * x
+    z = sum(src.vars)
+}
+VarsSource <-right- SumNode : src
+
+@enduml
