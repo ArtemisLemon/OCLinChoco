@@ -6,8 +6,8 @@ import org.chocosolver.solver.variables.IntVar;
 
 public class CSP{
     Model csp;
-    static final public int MIN_BOUND = IntVar.MIN_INT_BOUND/2 -1;
-    static final public int MAX_BOUND = IntVar.MAX_INT_BOUND/2; 
+    static final public int MIN_BOUND = IntVar.MIN_INT_BOUND/1000 -1;
+    static final public int MAX_BOUND = IntVar.MAX_INT_BOUND/1000; 
     IntVar nullptr;
     IntVar nullattrib;
 
