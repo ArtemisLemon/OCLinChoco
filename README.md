@@ -23,7 +23,7 @@ dependencies {
 ```
 
 ## Overview
-<img src="readme/overview.svg" alt="see diagrams" width=100%/>
+<img src="readme/overview.svg" width=100%/>
 
 We can split the models into **UML CSP** and **OCL CSP**, the former modeling what can be represented with a UML Instance Diagram, and the latter modeling OCL constraints applied to the instance.
 Attributes and References have their models among the **UML CSP**, each OCL word - or AST node - has their own set of **OCL CSP** models.
