@@ -25,9 +25,9 @@ public class AsSetNode implements OccSource {
         //Intermediate Variables and Constraints to complete Src Model
         int[] values = IntStream.range(0,src.ub()+1).toArray();
         IntVar[] src_occ = csp.model().intVarArray(values.length, 0,src.size());
-        System.out.println("Made Occurence representation for a PtrSource");
-        for(IntVar v : src.pointers()) System.out.println(v);
-        for(IntVar v : src_occ) System.out.println(v);
+        // System.out.println("Made Occurence representation for a PtrSource");
+        // for(IntVar v : src.pointers()) System.out.println(v);
+        // for(IntVar v : src_occ) System.out.println(v);
         csp.model().globalCardinality(src.pointers(), values, src_occ, true).post();
 
         //Variables
@@ -61,8 +61,8 @@ public class AsSetNode implements OccSource {
         } catch (Exception e){};
 
 
-        System.out.println("Made asSet variables");
-        for(IntVar v : out) System.out.println(v);
+        // System.out.println("Made asSet variables");
+        // for(IntVar v : out) System.out.println(v);
         return out;
     }
 }

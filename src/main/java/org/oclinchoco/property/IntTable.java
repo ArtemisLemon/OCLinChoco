@@ -16,7 +16,6 @@ public abstract class IntTable implements NavTable {
     IntVar[] nullrow;
 
     public IntTable(CSP m, int r, int min, int max){
-        System.out.println("new IntTable");
         csp=m.model();
         rows=r; cols=max;
         minCard=min; maxCard=max; has_nulls = !(min==max);
