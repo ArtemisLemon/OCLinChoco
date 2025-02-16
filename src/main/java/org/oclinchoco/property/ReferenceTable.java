@@ -24,7 +24,7 @@ public class ReferenceTable extends IntTable {
     IntVar[] nullptrs;
     int[] values;
 
-    public ReferenceTable(CSP m, int number_of_objects, int max_card, int min_card, int number_of_targets){
+    public ReferenceTable(CSP m, int number_of_objects, int max_card, int min_card, int number_of_targets){ //has extra data because of reduced domain
         super(m, number_of_objects, min_card, max_card);
 
         ub=number_of_targets;
@@ -83,37 +83,34 @@ public class ReferenceTable extends IntTable {
     @Override //NavTable
     public int ub(){return ub;}
 
-    public class AdjList implements PtrSource {
-        int objId;
-        ReferenceTable table;
+    public class AdjList extends IntTableRow implements PtrSource {
         private AdjList(int objId,ReferenceTable table){
-            this.objId=objId;
-            this.table=table;
+            super(objId);
         }
         @Override //PtrSource
-        public IntVar[] pointers(){return table.ptr_matrix[objId-1];}
-        @Override //Source
-        public int size() {return table.maxCard;}
-
-        public void loadData(int[] data){
-            // System.out.println("Object ID: "+objId);
-            for(int i=0;i<table.cols;i++){
-                if(data[i]!=-1){
-                    // System.out.println("AdjList LoadData");
-                    try{pointers()[i].updateBounds(data[i], data[i], null);}
-                    catch(Exception e){System.out.println("Contradiction when loading data:\nVariable Domain: "+pointers()[i]+"\nData:"+data[i] );}
-
-                }
-            }
-        }
-
-        public int[] getData(){
-            int[] out = new int[table.cols];
-            for(int i=0;i<cols;i++) out[i] = pointers()[i].getValue();
-            return out;
-        }
-        @Override
+        public IntVar[] pointers(){return ptr_matrix[objId-1];}
+        @Override //PtrSource
         public int ub() {return ub;}
+        @Override //Source
+        public int size() {return maxCard;}
+
+        // public void loadData(int[] data){
+        //     // System.out.println("Object ID: "+objId);
+        //     for(int i=0;i<cols;i++){
+        //         if(data[i]!=-1){
+        //             // System.out.println("AdjList LoadData");
+        //             try{pointers()[i].updateBounds(data[i], data[i], null);}
+        //             catch(Exception e){System.out.println("Contradiction when loading data:\nVariable Domain: "+pointers()[i]+"\nData:"+data[i] );}
+
+        //         }
+        //     }
+        // }
+
+        // public int[] getData(){
+        //     int[] out = new int[table.cols];
+        //     for(int i=0;i<cols;i++) out[i] = pointers()[i].getValue();
+        //     return out;
+        // }
     }
     public AdjList adjList(int objId){
         return new AdjList(objId,this);

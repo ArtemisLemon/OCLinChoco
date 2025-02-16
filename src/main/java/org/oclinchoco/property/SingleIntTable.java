@@ -4,16 +4,16 @@ import org.chocosolver.solver.Model;
 import org.chocosolver.solver.variables.IntVar;
 import org.chocosolver.util.tools.ArrayUtils;
 import org.oclinchoco.CSP;
-import org.oclinchoco.navigation.NavTable;
 import org.oclinchoco.source.VarSource;
 
-public class SingleIntTable implements NavTable {
+public class SingleIntTable extends IntTable {
 
     IntVar[] vars;
     IntVar nullattrib;
     Model csp;
 
     public SingleIntTable(CSP m, int r){
+        super(m, r, 0, 1);
         csp = m.model();
         nullattrib = m.nullattrib();
 
@@ -35,12 +35,10 @@ public class SingleIntTable implements NavTable {
     public int ub() { return CSP.MAX_BOUND; }
 
 
-    public class SingleIntAttribute implements VarSource {
-        int objId;
-        SingleIntTable table;
-        private SingleIntAttribute(int objId, SingleIntTable table){
-            this.objId=objId;
-            this.table=table;
+    public class SingleIntAttribute extends IntTableRow implements VarSource {
+        private SingleIntAttribute(int objId){
+            super(objId);
+            System.out.println("made single int attribute fir obj "+objId);
         }
 
         @Override //Source
@@ -49,21 +47,23 @@ public class SingleIntTable implements NavTable {
         @Override //VarSource
         public IntVar var() {return vars[objId-1];}
 
+        @Override
         public void loadData(int[] data){
+            System.out.println("Loading single in of obj"+objId);
             try{var().updateBounds(data[0], data[0], null);}
             catch(Exception e){System.out.println("Contradiction when loading data:\nVariable Domain: "+var()+"\nData:"+data[0] );}
         }
 
-        public int[] getData(){
-            int[] out = new int[1];
-            out[0] = var().getValue();
-            return out;
-        }
+        // public int[] getData(){
+        //     int[] out = new int[1];
+        //     out[0] = var().getValue();
+        //     return out;
+        // }
         
     }
 
     public SingleIntAttribute singleattribute(int objId){
-        return new SingleIntAttribute(objId, this);
+        return new SingleIntAttribute(objId);
     }
 
     @Override

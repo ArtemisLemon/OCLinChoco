@@ -52,7 +52,7 @@ public abstract class IntTable implements NavTable {
         public void loadData(int[] data){
             // System.out.println("Object ID: "+objId);
             for(int i=0;i<cols;i++){
-                if(data[i]!=-1){
+                if(data[i]!=nullrow[0].getValue()-1){
                     // System.out.println("AdjList LoadData");
                     try{vars()[i].updateBounds(data[i], data[i], null);}
                     catch(Exception e){System.out.println("Contradiction when loading data:\nVariable Domain: "+vars()[i]+"\nData:"+data[i] );}
@@ -68,7 +68,7 @@ public abstract class IntTable implements NavTable {
         }        
     }
 
-    public IntTableRow attribute(int objId){
+    public IntTableRow intproperty(int objId){
         return new IntTableRow(objId);
     }
 
