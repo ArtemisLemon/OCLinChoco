@@ -78,7 +78,7 @@ public class ReferenceTable extends IntTable {
     // public int cols(){return cols;}
     
     @Override //NavTable
-    public int lb(){ return lb; }
+    public int lb(){ return 0; }
 
     @Override //NavTable
     public int ub(){return ub;}
