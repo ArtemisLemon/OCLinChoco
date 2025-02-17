@@ -21,8 +21,8 @@ package UMLCSP{
   class AdjList implements PtrSource {}
   ReferenceTable *-- AdjList
   
-  class SingleIntTable extends IntTable{}
-  class SingleIntTableRow implements VarSource{}
+  class SingleIntTable extends AttributeTable{}
+  class SingleIntTableRow extends AttributeTableRow implements VarSource{}
   SingleIntTable *-- SingleIntTableRow
 
 }
