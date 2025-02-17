@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.chocosolver.solver.Model;
+import org.chocosolver.solver.constraints.Constraint;
+import org.chocosolver.solver.constraints.nary.alldifferent.conditions.Condition;
 import org.chocosolver.solver.variables.IntVar;
 import org.oclinchoco.property.AttributeTable;
 import org.oclinchoco.property.IntTable;
@@ -70,5 +72,18 @@ public class CSP{
 
     public void ZeroIFZero(IntVar x, IntVar y){ //x=0 <- y=0
         csp.ifThen(csp.arithm(y, "=", 0), csp.arithm(x, "=", 0));
+    }
+
+    public Constraint allDiffExceptNullPtr(IntVar[] vars){
+        return csp.allDifferentExcept0(vars);
+    }
+
+    public Constraint allDiffExceptNullAttrib(IntVar[] vars){
+        return csp.allDifferentUnderCondition(vars, new Condition() {
+            @Override
+            public boolean holdOnVar(IntVar x) {
+                return !x.contains(MIN_BOUND);
+            }
+        }, true);
     }
 }
