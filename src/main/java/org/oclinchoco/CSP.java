@@ -1,8 +1,16 @@
 package org.oclinchoco;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.variables.IntVar;
+import org.oclinchoco.property.AttributeTable;
+import org.oclinchoco.property.IntTable;
+import org.oclinchoco.property.ReferenceTable;
+import org.oclinchoco.property.SingleIntTable;
+import org.oclinchoco.property.IntTable.IntTableRow;
+import org.oclinchoco.source.Source;
 
 public class CSP{
     Model csp;
@@ -11,15 +19,49 @@ public class CSP{
     IntVar nullptr;
     IntVar nullattrib;
 
+    List<String> table_names;
+    HashMap<String,IntTable> tables;
+
+    List<String> node_expression;
+    HashMap<String, Source> nodes;
+
     public CSP(){
         csp = new Model();
         nullptr = csp.intVar(0);
         nullattrib = csp.intVar(MIN_BOUND);
+
+        table_names = new ArrayList<>();
+        tables = new HashMap<>();
+    }
+
+    public void addTable(String prop, IntTable table){
+        table_names.add(prop);
+        tables.put(prop, table);
+    }
+    public void addNode(String exp, Source node){
+        node_expression.add(exp);
+        nodes.put(exp, node);
     }
 
     public Model model(){return csp;}
     public IntVar nullptr(){return nullptr;}
     public IntVar nullattrib(){return nullattrib;}
+    public IntTable getTable(String prop){return tables.get(prop);}
+    public Source getNode(String exp){return nodes.get(exp);}
+
+    public void printTables(){
+        for(String table : table_names){
+            System.out.println(table);
+            System.out.println(tables.get(table));
+        }
+    }
+
+    public void printNodes(){
+        for(String node : node_expression){
+            System.out.println(node);
+            System.out.println(tables.get(node));
+        }
+    }
 
     //To Move?
     public void ZeroIFFZero(IntVar x, IntVar y){ //x=0 <-> y=0
