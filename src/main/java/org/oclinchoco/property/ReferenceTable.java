@@ -69,13 +69,6 @@ public class ReferenceTable extends IntTable {
             m.ifOnlyIf(m.arithm(aocc[i][j+1], "=",0), m.arithm(bocc[j][i+1], "=",0));
         }
     }
-
-    // @Override //NavTable
-    // public IntVar[] navTable(){
-    //     return ArrayUtils.concat(nullptrs, ArrayUtils.flatten(ptr_matrix));
-    // }
-    // @Override //NavTable
-    // public int cols(){return cols;}
     
     @Override //NavTable
     public int lb(){ return 0; }
@@ -84,7 +77,7 @@ public class ReferenceTable extends IntTable {
     public int ub(){return ub;}
 
     public class AdjList extends IntTableRow implements PtrSource {
-        private AdjList(int objId,ReferenceTable table){
+        private AdjList(int objId){
             super(objId);
         }
         @Override //PtrSource
@@ -93,27 +86,10 @@ public class ReferenceTable extends IntTable {
         public int ub() {return ub;}
         @Override //Source
         public int size() {return maxCard;}
-
-        // public void loadData(int[] data){
-        //     // System.out.println("Object ID: "+objId);
-        //     for(int i=0;i<cols;i++){
-        //         if(data[i]!=-1){
-        //             // System.out.println("AdjList LoadData");
-        //             try{pointers()[i].updateBounds(data[i], data[i], null);}
-        //             catch(Exception e){System.out.println("Contradiction when loading data:\nVariable Domain: "+pointers()[i]+"\nData:"+data[i] );}
-
-        //         }
-        //     }
-        // }
-
-        // public int[] getData(){
-        //     int[] out = new int[table.cols];
-        //     for(int i=0;i<cols;i++) out[i] = pointers()[i].getValue();
-        //     return out;
-        // }
+        
     }
     public AdjList adjList(int objId){
-        return new AdjList(objId,this);
+        return new AdjList(objId);
     }
 
 

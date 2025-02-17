@@ -6,7 +6,7 @@ import org.chocosolver.util.tools.ArrayUtils;
 import org.oclinchoco.CSP;
 import org.oclinchoco.navigation.NavTable;
 
-// abstract so you can't make it without constraints
+// abstract so you can't make it without variables and constraints
 public abstract class IntTable implements NavTable {
     final int rows,cols; //number of squares and possible numbers in them
     final int minCard, maxCard; boolean has_nulls; //Reference Cardinality
@@ -35,12 +35,6 @@ public abstract class IntTable implements NavTable {
     @Override
     public int cols() {return cols;}
 
-    @Override
-    public int lb() { return CSP.MIN_BOUND; }
-
-    @Override
-    public int ub() { return CSP.MAX_BOUND; }
-
     public class IntTableRow {
         int objId;
         protected IntTableRow(int objId){
@@ -50,10 +44,11 @@ public abstract class IntTable implements NavTable {
         public IntVar[] vars() {return matrix[objId-1];}
 
         public void loadData(int[] data){
+            // System.out.println("IntTableRow LoadData");
             // System.out.println("Object ID: "+objId);
             for(int i=0;i<cols;i++){
                 if(data[i]!=nullrow[0].getValue()-1){
-                    // System.out.println("AdjList LoadData");
+                    // System.out.println(data[i]+", ");
                     try{vars()[i].updateBounds(data[i], data[i], null);}
                     catch(Exception e){System.out.println("Contradiction when loading data:\nVariable Domain: "+vars()[i]+"\nData:"+data[i] );}
 

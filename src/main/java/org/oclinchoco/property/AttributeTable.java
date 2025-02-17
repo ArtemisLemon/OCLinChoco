@@ -20,7 +20,14 @@ public class AttributeTable extends IntTable {
         } catch(Exception e){System.out.println("Contradiction when removing null attributes");}
     }
 
-    public class AttributeTableRow extends IntTable.IntTableRow implements VarsSource{
+
+    @Override //NavTable
+    public int lb() { return CSP.MIN_BOUND; }
+
+    @Override //NavTable
+    public int ub() { return CSP.MAX_BOUND; }
+
+    public class AttributeTableRow extends IntTableRow implements VarsSource{
         public AttributeTableRow(int objId){
             super(objId);
         }
@@ -40,6 +47,10 @@ public class AttributeTable extends IntTable {
         //         }
         //     }
         // }
+    }
+
+    public AttributeTableRow getAttribute(int i){
+        return new AttributeTableRow(i);
     }
 
 }

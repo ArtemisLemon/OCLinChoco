@@ -28,8 +28,8 @@ public class NavCSP implements Source {
     public static NavCSP makeNavCSP(CSP csp, PtrSource src, NavTable table){
         return switch(table){
             case ReferenceTable refs -> new Nav2Ptr(csp, src, refs);
-            case AttributeTable att -> new Nav2Ints(csp, src, att);
             case SingleIntTable var -> navToSingleInt(csp, src, var);
+            case AttributeTable att -> new Nav2Ints(csp, src, att);
             default -> throw new UnsupportedOperationException("can't navigate to " + table);
         };
     }
