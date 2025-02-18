@@ -6,8 +6,8 @@ import org.oclinchoco.source.PtrSource;
 import org.oclinchoco.source.Source;
 import org.oclinchoco.source.VarsSource;
 
-public class AsSetNode {
-    static public AsSetNode asSet(CSP csp, Source src){
+public abstract class AsSetNode implements Source {
+    static public AsSetNode create(CSP csp, Source src){
         return switch(src){
             case PtrSource ptr -> new PtrAsSetNode(csp, new PtrAsBagNode(csp, ptr));
             case OccSource occ -> new PtrAsSetNode(csp, occ);

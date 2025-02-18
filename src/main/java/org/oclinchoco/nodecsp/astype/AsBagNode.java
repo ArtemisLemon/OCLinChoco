@@ -6,8 +6,8 @@ import org.oclinchoco.source.PtrSource;
 import org.oclinchoco.source.Source;
 import org.oclinchoco.source.VarsSource;
 
-public class AsBagNode {
-    static public AsBagNode asBag(CSP csp, Source src){
+public abstract class AsBagNode implements Source {
+    static public AsBagNode create(CSP csp, Source src){
         return switch(src){
             case PtrSource ptr -> new PtrAsBagNode(csp, ptr);
             case OccSource occ -> new PtrAsBagNode(csp, occ);
