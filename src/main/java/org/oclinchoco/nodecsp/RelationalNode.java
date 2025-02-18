@@ -5,17 +5,14 @@ import org.oclinchoco.source.BoolSource;
 import org.oclinchoco.source.VarSource;
 
 public class RelationalNode implements BoolSource {
-    BoolVar reifed;
+    BoolVar bool;
     
     public RelationalNode(CSP csp, VarSource left, VarSource right, String op){
-        csp.model().arithm(left.var(), op, right.var()).post();
-        
-        //TODO don't always post
-        reifed = csp.model().boolVar(true);
+        bool = csp.model().arithm(left.var(), op, right.var()).reify();
     }
 
     @Override
-    public BoolVar var() {
-        return reifed;
+    public BoolVar bool() {
+        return bool;
     }
 }
