@@ -1,0 +1,11 @@
+@startuml
+
+[*]--> q0
+q0 --> q0 : NotNull
+q0 --> [*]
+q0 --> q1 : Null
+q1 --> q1 : NotNull
+q1 --> [*]
+
+
+@enduml

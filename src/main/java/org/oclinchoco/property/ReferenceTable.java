@@ -37,6 +37,8 @@ public class ReferenceTable extends IntTable {
         occ_matrix = csp.intVarMatrix(rows, values.length, values[0], cols);
         matrix = ptr_matrix;
         
+        m.alignPtrMatrix(matrix);
+
         // Constraints
         for(int i=0;i<rows;i++) 
             csp.globalCardinality(ptr_matrix[i], values, occ_matrix[i], true).post();//ptr model = occ model //closed because we have var for each

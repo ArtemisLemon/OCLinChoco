@@ -11,6 +11,8 @@ public class AttributeTable extends IntTable {
 
         matrix = csp.intVarMatrix(rows, cols, CSP.MIN_BOUND, CSP.MAX_BOUND);
 
+        m.alignVarMatrix(matrix);
+
         nullrow = new IntVar[cols];
         for(int i=0;i<cols;i++) nullrow[i] = m.nullattrib();
 
