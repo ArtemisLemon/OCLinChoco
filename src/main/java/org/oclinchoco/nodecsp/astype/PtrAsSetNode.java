@@ -7,8 +7,10 @@ import org.oclinchoco.source.OccSource;
 
 public class PtrAsSetNode extends AsSetNode implements OccSource {
     IntVar[] occ;
+    int max;
 
     public PtrAsSetNode(CSP csp, OccSource src){
+        max = src.occurences().length-1;
         occ = SetModel(csp, src.occurences().length);
         for(int i=0;i<occ.length;i++) csp.ZeroIFFZero(occ[i], src.occurences()[i]);
         nullptrcount(csp);
@@ -39,4 +41,7 @@ public class PtrAsSetNode extends AsSetNode implements OccSource {
         // for(IntVar v : out) System.out.println(v);
         return out;
     }
+
+    @Override
+    public int maxCard() {return max;}
 }

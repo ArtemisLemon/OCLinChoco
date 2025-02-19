@@ -9,15 +9,18 @@ import org.oclinchoco.source.PtrSource;
 
 public class PtrAsBagNode extends AsBagNode implements OccSource{
     IntVar[] occs;
+    int max;
 
     public PtrAsBagNode(CSP csp, PtrSource src){
+        max = src.size();
         int[] values = IntStream.range(0,src.ub()+1).toArray();
         occs = csp.model().intVarArray(src.ub()+1, 0, src.size());
 
-        csp.model().globalCardinality(src.pointers(), values, occs, true);
+        csp.model().globalCardinality(src.pointers(), values, occs, true).post();
     }
 
     public PtrAsBagNode(CSP csp, OccSource src){
+        max = src.maxCard();
         occs=src.occurences();
     }
 
@@ -27,4 +30,7 @@ public class PtrAsBagNode extends AsBagNode implements OccSource{
 
     @Override
     public IntVar[] occurences() { return occs; }
+
+    @Override
+    public int maxCard() { return max; }
 }

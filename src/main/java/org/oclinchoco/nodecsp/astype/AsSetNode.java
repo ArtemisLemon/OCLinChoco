@@ -12,7 +12,7 @@ public abstract class AsSetNode implements Source {
             case PtrSource ptr -> new PtrAsSetNode(csp, new PtrAsBagNode(csp, ptr));
             case OccSource occ -> new PtrAsSetNode(csp, occ);
             case VarsSource vars -> new VarsAsSetNode(csp, vars);
-            default -> throw new UnsupportedOperationException("No semantics for AsSet on " + src);
+            default -> throw new UnsupportedOperationException("No semantics for asSet on " + src);
         };
     }
 }

@@ -12,7 +12,7 @@ public abstract class AsBagNode implements Source {
             case PtrSource ptr -> new PtrAsBagNode(csp, ptr);
             case OccSource occ -> new PtrAsBagNode(csp, occ);
             case VarsSource vars -> new VarsAsBagNode(csp, vars);
-            default -> throw new UnsupportedOperationException("No semantics for AsBag on " + src);
+            default -> throw new UnsupportedOperationException("No semantics for asBag on " + src);
         };
     }
 }

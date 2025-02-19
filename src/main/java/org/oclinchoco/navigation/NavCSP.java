@@ -3,6 +3,7 @@ import org.oclinchoco.CSP;
 import org.oclinchoco.property.AttributeTable;
 import org.oclinchoco.property.ReferenceTable;
 import org.oclinchoco.property.SingleIntTable;
+import org.oclinchoco.source.OccSource;
 import org.oclinchoco.source.PtrSource;
 import org.oclinchoco.source.Source;
 import org.chocosolver.solver.variables.IntVar;
