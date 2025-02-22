@@ -7,6 +7,7 @@ import org.chocosolver.solver.Model;
 import org.chocosolver.solver.constraints.Constraint;
 import org.chocosolver.solver.constraints.nary.alldifferent.conditions.Condition;
 import org.chocosolver.solver.constraints.nary.automata.FA.FiniteAutomaton;
+import org.chocosolver.solver.variables.BoolVar;
 import org.chocosolver.solver.variables.IntVar;
 import org.oclinchoco.property.IntTable;
 import org.oclinchoco.source.Source;
@@ -107,5 +108,35 @@ public class CSP{
         if(matrix[0].length==1) return;
         for(int i=0;i<matrix.length;i++)
             varNullsAtEnd(matrix[i]).post();
+    }
+
+
+    public void elementAlignedCopy(IntVar[]x,IntVar[]y, int nu){
+        System.out.println("Making Aligned Copy");
+        int len = x.length;
+        
+        BoolVar[] isNull = new BoolVar[len];
+        for(int i=0;i<len;i++){
+            isNull[i] = csp.arithm(x[i], "=", nu).reify();
+        }
+        
+        IntVar[] nullpos = new IntVar[len];
+        IntVar lenVar = csp.intVar(len);
+        nullpos[0] = lenVar.sub(isNull[0]).intVar();
+        
+        IntVar[] valpos = new IntVar[len];
+        IntVar raVnel = csp.intVar(-1);
+        valpos[0] = raVnel.add(isNull[0].not()).intVar();
+        
+        for(int i=1;i<len;i++){
+            nullpos[i] = nullpos[i-1].sub(isNull[i]).intVar();
+            valpos[i] = valpos[i-1].add(isNull[i].not()).intVar();
+        }
+
+        IntVar[] pos = new IntVar[len];
+        for(int i=0;i<len;i++){
+            pos[i] = nullpos[i].mul(isNull[i]).add(valpos[i].mul(isNull[i].not())).intVar();
+            csp.element(x[i], y, pos[i], 0).post();
+        }
     }
 }
