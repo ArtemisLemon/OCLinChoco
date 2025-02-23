@@ -9,8 +9,8 @@ import org.oclinchoco.source.VarsSource;
 public abstract class AsBagNode implements Source {
     static public AsBagNode create(CSP csp, Source src){
         return switch(src){
-            case PtrSource ptr -> new PtrAsBagNode(csp, ptr);
-            case OccSource occ -> new PtrAsBagNode(csp, occ);
+            case PtrSource ptr -> new PtrAsOccBagNode(csp, ptr);
+            case OccSource occ -> new PtrAsOccBagNode(csp, occ);
             case VarsSource vars -> new VarsAsBagNode(csp, vars);
             default -> throw new UnsupportedOperationException("No semantics for asBag on " + src);
         };

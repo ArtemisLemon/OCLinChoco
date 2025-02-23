@@ -18,10 +18,9 @@ public class PtrAsSequenceNode extends AsSequenceNode implements PtrSource{
     }
 
     public PtrAsSequenceNode(CSP csp, PtrSource ptr){
-        vars=ptr.pointers();
         ub=ptr.ub();
-
-        // Apply AFD
+        vars=csp.model().intVarArray(ptr.size(), 0,ptr.ub());
+        csp.elementAlignedCopy(ptr.pointers(), vars, 0);
     }
 
     @Override

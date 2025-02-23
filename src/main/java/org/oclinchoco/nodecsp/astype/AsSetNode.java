@@ -9,8 +9,8 @@ import org.oclinchoco.source.VarsSource;
 public abstract class AsSetNode implements Source {
     static public AsSetNode create(CSP csp, Source src){
         return switch(src){
-            case PtrSource ptr -> new PtrAsSetNode(csp, new PtrAsBagNode(csp, ptr));
-            case OccSource occ -> new PtrAsSetNode(csp, occ);
+            case PtrSource ptr -> new PtrAsOccSetNode(csp, new PtrAsOccBagNode(csp, ptr));
+            case OccSource occ -> new PtrAsOccSetNode(csp, occ);
             case VarsSource vars -> new VarsAsSetNode(csp, vars);
             default -> throw new UnsupportedOperationException("No semantics for asSet on " + src);
         };
