@@ -1,47 +1,39 @@
 package org.oclinchoco.nodecsp.astype;
-import java.util.Arrays;
 
 import org.chocosolver.solver.variables.IntVar;
+import org.chocosolver.util.tools.ArrayUtils;
 import org.oclinchoco.CSP;
-import org.oclinchoco.source.OccSource;
+import org.oclinchoco.source.PtrSource;
 
-public class PtrAsSetNode extends AsSetNode implements OccSource {
-    IntVar[] occ;
-    int max;
+public class PtrAsSetNode extends AsSetNode implements PtrSource{
+    IntVar[] vars;
+    int size,ub;
 
-    public PtrAsSetNode(CSP csp, OccSource src){
-        max = src.occurences().length-1;
-        occ = SetModel(csp, src.occurences().length);
-        for(int i=0;i<occ.length;i++) csp.ZeroIFFZero(occ[i], src.occurences()[i]);
-        nullptrcount(csp);
+    public PtrAsSetNode(CSP csp, PtrSource src){
+        ub=src.ub();
+        PtrAsBagNode bag = new PtrAsBagNode(csp, src);
+        IntVar[] bagwithnull = ArrayUtils.concat(bag.pointers(), csp.nullptr());
+        IntVar[] varswithnull = csp.model().intVarArray(bagwithnull.length, 0, src.ub());
+        IntVar[] setpos = new IntVar[bagwithnull.length];
+        setpos[0]= csp.model().intVar(0);
+        bagwithnull[0].eq(varswithnull[0]).post();
+        for(int i=1;i<bagwithnull.length;i++){
+            setpos[i]=setpos[i-1].add(bagwithnull[i].ne(bagwithnull[i-1]).intVar()).intVar();
+            csp.model().element(bagwithnull[i], varswithnull, setpos[i],0).post();;
+            varswithnull[i].le(varswithnull[i-1]).post();
+        }
+        vars = new IntVar[bag.size()];
+        for(int i=0;i<bag.size();i++){
+            vars[i] = varswithnull[i];
+        }
     }
 
     @Override
-    public int size() {return occ.length-1;} //-1 because we don't need to count the null ptr collum //why?
-    @Override
-    public IntVar[] occurences() { return occ;}
-
-
-    void nullptrcount(CSP csp){
-        IntVar[] notnullcount = Arrays.copyOfRange(occ, 1, occ.length);
-        csp.model().count(0, notnullcount, occ[0]).post();
-    }
-
-    // Probably should go somewhere else
-    private static IntVar[] SetModel(CSP csp, int length){
-        IntVar[] out = csp.model().intVarArray(length, 0, length-1);
-        try{ //maybe it just this part that needs to go somewhere else
-            for(int i=1;i<out.length;i++){
-                out[i].updateUpperBound(1, null); //max occurences for everyting but nullptr is 1
-            }
-        } catch (Exception e){};
-
-
-        // System.out.println("Made asSet variables");
-        // for(IntVar v : out) System.out.println(v);
-        return out;
-    }
+    public int size() {return vars.length;}
 
     @Override
-    public int maxCard() {return max;}
+    public IntVar[] pointers() {return vars;}
+
+    @Override
+    public int ub() {return ub;}
 }

@@ -1,36 +1,29 @@
 package org.oclinchoco.nodecsp.astype;
 
-import java.util.stream.IntStream;
-
 import org.chocosolver.solver.variables.IntVar;
+import org.chocosolver.util.tools.ArrayUtils;
 import org.oclinchoco.CSP;
-import org.oclinchoco.source.OccSource;
 import org.oclinchoco.source.PtrSource;
 
-public class PtrAsBagNode extends AsBagNode implements OccSource{
-    IntVar[] occs;
-    int max;
+public class PtrAsBagNode extends AsBagNode implements PtrSource{
+    IntVar[] vars;
+    int size,ub;
 
     public PtrAsBagNode(CSP csp, PtrSource src){
-        max = src.size();
-        int[] values = IntStream.range(0,src.ub()+1).toArray();
-        occs = csp.model().intVarArray(src.ub()+1, 0, src.size());
-
-        csp.model().globalCardinality(src.pointers(), values, occs, true).post();
+        ub=src.ub();
+        vars = csp.model().intVarArray(src.size(), 0, src.ub());
+        IntVar[] srav = vars.clone();
+        ArrayUtils.reverse(srav);
+        csp.model().sort(src.pointers(), srav).post();
     }
 
-    public PtrAsBagNode(CSP csp, OccSource src){
-        max = src.maxCard();
-        occs=src.occurences();
-    }
-
+    @Override
+    public int size() {return vars.length;}
 
     @Override
-    public int size() { return occs.length; }
+    public IntVar[] pointers() {return vars;}
 
     @Override
-    public IntVar[] occurences() { return occs; }
+    public int ub() {return ub;}
 
-    @Override
-    public int maxCard() { return max; }
 }
