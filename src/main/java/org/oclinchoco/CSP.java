@@ -34,6 +34,8 @@ public class CSP{
 
         table_names = new ArrayList<>();
         tables = new HashMap<>();
+        node_expression = new ArrayList<>();
+        nodes = new HashMap<>();
     }
 
     public void addTable(String prop, IntTable table){
@@ -61,7 +63,7 @@ public class CSP{
     public void printNodes(){
         for(String node : node_expression){
             System.out.println(node);
-            System.out.println(tables.get(node));
+            System.out.println(nodes.get(node));
         }
     }
 
