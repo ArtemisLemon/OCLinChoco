@@ -11,13 +11,13 @@ public class Nav2Ints extends NavCSP implements VarsSource{
     public Nav2Ints(CSP m, PtrSource src, NavTable table) {
         super(m, src, table);
 
-        alignedVars = m.model().intVarArray(src.size()*table.cols(),table.lb(), table.ub());
-        m.elementAlignedCopy(vars,alignedVars,table.lb());
-        // m.varNullsAtEnd(alignedVars);
+        // alignedVars = m.model().intVarArray(src.size()*table.cols(),table.lb(), table.ub());
+        // m.elementAlignedCopy(vars,alignedVars,table.lb());
+        // m.varNullsAtEnd(alignedVars).post();
     }
 
     @Override
-    public IntVar[] vars() {return alignedVars;}
+    public IntVar[] vars() {return vars;}
 
     @Override
     public int size() { return vars.length; }
